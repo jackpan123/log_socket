@@ -17,7 +17,7 @@
 #define SA struct sockaddr
 #define TRUE 1
 // Function designed for chat between client and server.
-void func(int sockfd)
+void func(int sockfd, char *filepath)
 {
     char buff[MAX];
     // infinite loop for chat
@@ -43,7 +43,7 @@ void func(int sockfd)
         long int pos, old_pos, tmp_pos;
         char s[100];
 
-        in = fopen("/Users/jackpan/JackPanDocuments/lczy-project/qinggong-edp/edp-main/target/nohup.out", "r");
+        in = fopen(filepath, "r");
         /* always check return of fopen */
         if (in == NULL) {
             perror("fopen");
@@ -64,12 +64,12 @@ void func(int sockfd)
         }
         /* Write line by line, is faster than fputc for each char */
         while (fgets(s, sizeof(s), in) != NULL) {
-            printf("%s \n", s);
+            write(sockfd, s, sizeof(s));
         }
         fclose(in);
         int monitor_num = 0;
         while (1) {
-            in = fopen("/Users/jackpan/JackPanDocuments/lczy-project/qinggong-edp/edp-main/target/nohup.out", "r");
+            in = fopen(filepath, "r");
             if (in == NULL) {
                 perror("fopen");
                 exit(EXIT_FAILURE);
@@ -111,8 +111,16 @@ void func(int sockfd)
 }
 
 // Driver function
-int main()
+int main(int agrc, char *agrv[])
 {
+    if (agrc < 2) {
+        printf("You need add absoulate path in command");
+        return 0;
+    }
+    
+    printf("%s", agrv[1]);
+    char *filepath = agrv[1];
+    printf("%s", filepath);
     int sockfd, connfd, len;
     struct sockaddr_in servaddr, cli;
    
@@ -160,7 +168,7 @@ int main()
         printf("server accept the client...\n");
    
     // Function for chatting between client and server
-    func(connfd);
+    func(connfd, filepath);
    
     // After chatting close the socket
     //close(sockfd);
