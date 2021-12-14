@@ -12,8 +12,8 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
-#define MAX 512
-#define PORT 8080
+#define MAX 1024
+#define PORT 8083
 #define SA struct sockaddr
 #define TRUE 1
 // Function designed for chat between client and server.
@@ -23,25 +23,11 @@ void func(int sockfd, char *filepath)
     // infinite loop for chat
     for (;;) {
         bzero(buff, MAX);
-   
-        // read the message from client and copy it in buffer
-//        read(sockfd, buff, sizeof(buff));
-        // print buffer which contains the client contents
-//        printf("From client: %s\t To client : ", buff);
-//        bzero(buff, MAX);
-//        n = 0;
-        // copy server message in the buffer
-//        while ((buff[n++] = getchar()) != '\n')
-//            ;
-   
-        // and send that buffer to client
-
-//        strcpy(buff, "This is some text");
         
         FILE *in;
         int count = 0;
         long int pos, old_pos, tmp_pos;
-        char s[512];
+        char s[1024];
 
         in = fopen(filepath, "r");
         /* always check return of fopen */
@@ -64,6 +50,7 @@ void func(int sockfd, char *filepath)
         }
         /* Write line by line, is faster than fputc for each char */
         while (fgets(s, sizeof(s), in) != NULL) {
+            printf("%s \n", s);
             write(sockfd, s, sizeof(s));
         }
         fclose(in);
@@ -101,12 +88,6 @@ void func(int sockfd, char *filepath)
             fclose(in);
         }
         
-   
-        // if msg contains "Exit" then server exit and chat ended.
-//        if (strncmp("exit", buff, 4) == 0) {
-//            printf("Server Exit...\n");
-//            break;
-//        }
     }
 }
 

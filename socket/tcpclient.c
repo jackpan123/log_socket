@@ -14,23 +14,20 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <wchar.h>
-#define MAX 512
-#define PORT 8080
+#define MAX 1024
+#define PORT 8083
 #define SA struct sockaddr
 void func(int sockfd)
 {
+    FILE *fp;
     char buff[MAX];
     for (;;) {
         bzero(buff, sizeof(buff));
-//        printf("Enter the string : ");
-//        n = 0;
-//        while ((buff[n++] = getchar()) != '\n')
-//            ;
-//        write(sockfd, buff, sizeof(buff));
-//        bzero(buff, sizeof(buff));
         read(sockfd, buff, sizeof(buff));
         printf("%s", buff);
-//        wprintf("From Server : %s", buff);
+        fp = fopen("/Users/jackpan/JackPanDocuments/temporary/c-test/test.out", "a+");
+        fprintf(fp, "%s", buff);
+        fclose(fp);
         if ((strncmp(buff, "exit", 4)) == 0) {
             printf("Client Exit...\n");
             break;
@@ -40,9 +37,9 @@ void func(int sockfd)
    
 int main()
 {
-    int sockfd, connfd;
-    struct sockaddr_in servaddr, cli;
-   
+    int sockfd;
+    struct sockaddr_in servaddr;
+
     // socket create and varification
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd == -1) {
