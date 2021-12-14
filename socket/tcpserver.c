@@ -12,7 +12,7 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
-#define MAX 80
+#define MAX 512
 #define PORT 8080
 #define SA struct sockaddr
 #define TRUE 1
@@ -41,7 +41,7 @@ void func(int sockfd, char *filepath)
         FILE *in;
         int count = 0;
         long int pos, old_pos, tmp_pos;
-        char s[100];
+        char s[512];
 
         in = fopen(filepath, "r");
         /* always check return of fopen */

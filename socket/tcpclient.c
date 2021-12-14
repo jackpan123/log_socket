@@ -13,13 +13,13 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <arpa/inet.h>
-#define MAX 80
+#include <wchar.h>
+#define MAX 512
 #define PORT 8080
 #define SA struct sockaddr
 void func(int sockfd)
 {
     char buff[MAX];
-    int n;
     for (;;) {
         bzero(buff, sizeof(buff));
 //        printf("Enter the string : ");
@@ -29,7 +29,8 @@ void func(int sockfd)
 //        write(sockfd, buff, sizeof(buff));
 //        bzero(buff, sizeof(buff));
         read(sockfd, buff, sizeof(buff));
-        printf("From Server : %s", buff);
+        printf("%s", buff);
+//        wprintf("From Server : %s", buff);
         if ((strncmp(buff, "exit", 4)) == 0) {
             printf("Client Exit...\n");
             break;
