@@ -13,7 +13,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 #define MAX 1024
-#define PORT 8083
 #define SA struct sockaddr
 #define TRUE 1
 // Function designed for chat between client and server.
@@ -102,6 +101,8 @@ int main(int agrc, char *agrv[])
     printf("%s", agrv[1]);
     char *filepath = agrv[1];
     printf("%s", filepath);
+    char *port_arr = agrv[2];
+    int port = atoi(port_arr);
     int sockfd, connfd, len;
     struct sockaddr_in servaddr, cli;
    
@@ -118,7 +119,7 @@ int main(int agrc, char *agrv[])
     // assign IP, PORT
     servaddr.sin_family = AF_INET;
     servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-    servaddr.sin_port = htons(PORT);
+    servaddr.sin_port = htons(port);
    
     
     // Binding newly created socket to given IP and verification

@@ -15,9 +15,8 @@
 #include <arpa/inet.h>
 #include <wchar.h>
 #define MAX 1024
-#define PORT 8083
 #define SA struct sockaddr
-void func(int sockfd)
+void func(int sockfd, char *filepath)
 {
     FILE *fp;
     char buff[MAX];
@@ -25,7 +24,7 @@ void func(int sockfd)
         bzero(buff, sizeof(buff));
         read(sockfd, buff, sizeof(buff));
         printf("%s", buff);
-        fp = fopen("/Users/jackpan/JackPanDocuments/temporary/c-test/test.out", "a+");
+        fp = fopen(filepath, "a+");
         fprintf(fp, "%s", buff);
         fclose(fp);
         if ((strncmp(buff, "exit", 4)) == 0) {
@@ -35,8 +34,13 @@ void func(int sockfd)
     }
 }
    
-int main()
+int main(int agrc, char *agrv[])
 {
+    printf("%s", agrv[1]);
+    char *filepath = agrv[1];
+    printf("%s", filepath);
+    char *port_arr = agrv[2];
+    int port = atoi(port_arr);
     int sockfd;
     struct sockaddr_in servaddr;
 
@@ -52,8 +56,8 @@ int main()
    
     // assign IP, PORT
     servaddr.sin_family = AF_INET;
-    servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-    servaddr.sin_port = htons(PORT);
+    servaddr.sin_addr.s_addr = inet_addr("192.168.38.16");
+    servaddr.sin_port = htons(port);
    
     // connect the client socket to server socket
     if (connect(sockfd, (SA*)&servaddr, sizeof(servaddr)) != 0) {
@@ -64,7 +68,7 @@ int main()
         printf("connected to the server..\n");
    
     // function for chat
-    func(sockfd);
+    func(sockfd, filepath);
    
     // close the socket
     close(sockfd);
