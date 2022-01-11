@@ -141,7 +141,6 @@ int main(int agrc, char *agrv[])
    
     // Accept the data packet from client and verification
     connfd = accept(sockfd, (SA*)&cli, (socklen_t*)&len);
-    printf("hahah\n");
     if (connfd < 0) {
         printf("server accept failed...\n");
         exit(0);

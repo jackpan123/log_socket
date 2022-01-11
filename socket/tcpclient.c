@@ -5,7 +5,6 @@
 //  Created by JackPan on 2021/12/12.
 //
 
-
 #include <netdb.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,8 +20,8 @@ void func(int sockfd, char *filepath)
     FILE *fp;
     char buff[MAX];
     for (;;) {
-        bzero(buff, sizeof(buff));
-        read(sockfd, buff, sizeof(buff));
+        bzero(buff, MAX);
+        read(sockfd, buff, MAX);
         printf("%s", buff);
         fp = fopen(filepath, "a+");
         fprintf(fp, "%s", buff);
@@ -34,7 +33,7 @@ void func(int sockfd, char *filepath)
     }
 }
    
-int main(int agrc, char *agrv[])
+int main(int agrc, char* agrv[])
 {
     printf("%s", agrv[1]);
     char *filepath = agrv[1];

@@ -58,3 +58,4 @@ DerivedData/
 
 ## Gcc Patch
 /*.gcno
+socket.xcodeproj/project.pbxproj
