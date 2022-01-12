@@ -1,13 +1,7 @@
-//
-//  readline.c
-//  socket
-//
-//  Created by JackPan on 2022/1/11.
-//
-
 #include <stdio.h>
 #include <stdlib.h>
-#define FILENAME "/usr/local/spring-edp/edp.2022-01-10.out"
+#include "getlineimpl.h"
+#define FILENAME "/Users/jackpan/JackPanDocuments/temporary/c-test/example.txt"
 int main(void) {
     
     /* Open the file for reading */
@@ -22,14 +16,14 @@ int main(void) {
     }
     
     /* */
-    line_size = getline(&line_buf, &line_buf_size, fp);
+    line_size = getlinejack(&line_buf, &line_buf_size, fp);
     while (line_size >= 0) {
         line_count++;
         
         printf("line[%06d]: chars=%06zd, buf size=%06zu, contents: %s", line_count, line_size, line_buf_size, line_buf);
         
         /*  */
-        line_size = getline(&line_buf, &line_buf_size, fp);
+        line_size = getlinejack(&line_buf, &line_buf_size, fp);
     }
     
     free(line_buf);
