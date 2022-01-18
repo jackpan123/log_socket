@@ -13,7 +13,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <wchar.h>
-#define MAX 1024
+#define MAX 8192
 #define SA struct sockaddr
 void func(int sockfd, char *filepath)
 {

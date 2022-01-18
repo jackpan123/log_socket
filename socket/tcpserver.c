@@ -19,6 +19,11 @@
 void func(int sockfd, char *filepath)
 {
     char buff[MAX];
+    char *line_buf = NULL;
+    size_t line_buf_size = 0;
+    ssize_t line_size;
+    int line_count = 0;
+
     // infinite loop for chat
     for (;;) {
         bzero(buff, MAX);
@@ -48,11 +53,18 @@ void func(int sockfd, char *filepath)
             }
         }
         /* Write line by line, is faster than fputc for each char */
-        while (fgets(s, sizeof(s), in) != NULL) {
-            printf("%s \n", s);
-            write(sockfd, s, sizeof(s));
+        
+        line_size = getline(&line_buf, &line_buf_size, in);
+        while (line_size >= 0) {
+            line_count++;
+            printf("line[%06d]: chars=%06zd, buf size=%06zu, contents: %s", line_count, line_size, line_buf_size, line_buf);
+            long write_number = write(sockfd, line_buf, line_size);
+            printf("Write line buf number %ld\n", write_number);
+            line_size = getline(&line_buf, &line_buf_size, in);
         }
+//        free(line_buf);
         fclose(in);
+
         int monitor_num = 0;
         while (1) {
             in = fopen(filepath, "r");
@@ -76,15 +88,19 @@ void func(int sockfd, char *filepath)
             }
             printf("append count is  %d \n", append_count);
 
-            /* Write line by line, is faster than fputc for each char */
-            while (fgets(s, sizeof(s), in) != NULL) {
-                printf("%s \n", s);
-                write(sockfd, s, sizeof(s));
+            line_size = getline(&line_buf, &line_buf_size, in);
+            while (line_size >= 0) {
+                line_count++;
+                printf("line[%06d]: chars=%06zd, buf size=%06zu, contents: %s", line_count, line_size, line_buf_size, line_buf);
+                write(sockfd, line_buf, line_size);
+                line_size = getline(&line_buf, &line_buf_size, in);
             }
             old_pos = tmp_pos;
             printf("Sleep 1 seconds %ld \n", old_pos);
             sleep(1);
+//            free(line_buf);
             fclose(in);
+            
         }
         
     }
