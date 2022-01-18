@@ -21,7 +21,10 @@ void func(int sockfd, char *filepath)
     char buff[MAX];
     for (;;) {
         bzero(buff, MAX);
-        read(sockfd, buff, MAX);
+        size_t readNumber = read(sockfd, buff, MAX);
+        if (readNumber == 0) {
+            break;
+        }
         printf("%s", buff);
         fp = fopen(filepath, "a+");
         fprintf(fp, "%s", buff);
@@ -31,6 +34,8 @@ void func(int sockfd, char *filepath)
             break;
         }
     }
+    
+    printf("Socket is closed.");
 }
    
 int main(int agrc, char* agrv[])

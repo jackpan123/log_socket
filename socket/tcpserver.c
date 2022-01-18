@@ -92,7 +92,10 @@ void func(int sockfd, char *filepath)
             while (line_size >= 0) {
                 line_count++;
                 printf("line[%06d]: chars=%06zd, buf size=%06zu, contents: %s", line_count, line_size, line_buf_size, line_buf);
-                write(sockfd, line_buf, line_size);
+                long write_number = write(sockfd, line_buf, line_size);
+                printf("Write line buf number %ld\n", write_number);
+                printf("sockfd is %d\n", sockfd);
+                printf("\n");
                 line_size = getline(&line_buf, &line_buf_size, in);
             }
             old_pos = tmp_pos;
