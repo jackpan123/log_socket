@@ -17,7 +17,7 @@
 
 #define SA struct sockaddr
 #define TRUE 1
-// Function designed for chat between client and server.
+
 void func(int sockfd, char *filepath)
 {
     char buff[MAX];
@@ -26,14 +26,12 @@ void func(int sockfd, char *filepath)
     ssize_t line_size;
     int line_count = 0;
 
-    // infinite loop for chat
     bzero(buff, MAX);
     
     FILE *in;
     int count = 0;
     long int pos, old_pos, tmp_pos;
     in = fopen(filepath, "r");
-    /* always check return of fopen */
     if (in == NULL) {
         perror("fopen");
         exit(EXIT_FAILURE);
@@ -42,16 +40,14 @@ void func(int sockfd, char *filepath)
     pos = ftell(in);
     printf("pos is %ld \n", pos);
     old_pos = pos;
-    /* Don't write each char on output.txt, just search for '\n' */
     while (pos) {
-        fseek(in, --pos, SEEK_SET); /* seek from begin */
+        fseek(in, --pos, SEEK_SET);
         if (fgetc(in) == '\n') {
             if (count++ == 10) {
                 break;
             }
         }
     }
-    /* Write line by line, is faster than fputc for each char */
     
     line_size = getline(&line_buf, &line_buf_size, in);
     while (line_size >= 0) {
@@ -61,7 +57,6 @@ void func(int sockfd, char *filepath)
         printf("Write line buf number %ld\n", write_number);
         line_size = getline(&line_buf, &line_buf_size, in);
     }
-//        free(line_buf);
     fclose(in);
 
     int monitor_num = 0;
@@ -82,7 +77,7 @@ void func(int sockfd, char *filepath)
         tmp_pos = pos;
         int append_count = 0;
         while (pos > old_pos) {
-            fseek(in, --pos, SEEK_SET); /* seek from begin */
+            fseek(in, --pos, SEEK_SET);
             if (fgetc(in) == '\n') {
                 append_count++;
             }
@@ -107,7 +102,6 @@ void func(int sockfd, char *filepath)
         old_pos = tmp_pos;
         printf("Sleep 1 seconds %ld \n", old_pos);
         sleep(1);
-//            free(line_buf);
         fclose(in);
         
     }
@@ -116,7 +110,6 @@ void func(int sockfd, char *filepath)
         
 }
 
-// Driver function
 int main(int agrc, char *agrv[])
 {
     if (agrc < 2) {
@@ -133,7 +126,6 @@ int main(int agrc, char *agrv[])
     int sockfd, connfd, len;
     struct sockaddr_in servaddr, cli;
    
-    // socket create and verification
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd == -1) {
         printf("socket creation failed...\n");
@@ -143,22 +135,18 @@ int main(int agrc, char *agrv[])
         printf("Socket successfully created..\n");
     bzero(&servaddr, sizeof(servaddr));
    
-    // assign IP, PORT
     servaddr.sin_family = AF_INET;
     servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
     servaddr.sin_port = htons(port);
    
     
-    // Binding newly created socket to given IP and verification
     if ((bind(sockfd, (SA*)&servaddr, sizeof(servaddr))) != 0) {
         printf("socket bind failed...\n");
         exit(0);
     }
     else
         printf("Socket successfully binded..\n");
-   
-    // Now server is ready to listen and verification
-    
+       
    
     if ((listen(sockfd, 5)) != 0) {
         printf("Listen failed...\n");
@@ -168,7 +156,6 @@ int main(int agrc, char *agrv[])
         printf("Server listening..\n");
     len = sizeof(cli);
    
-    // Accept the data packet from client and verification
     connfd = accept(sockfd, (SA*)&cli, (socklen_t*)&len);
     if (connfd < 0) {
         printf("server accept failed...\n");
@@ -179,9 +166,6 @@ int main(int agrc, char *agrv[])
     
     printf("connfd is %d\n", connfd);
    
-    // Function for chatting between client and server
     func(connfd, filepath);
    
-    // After chatting close the socket
-    //close(sockfd);
 }

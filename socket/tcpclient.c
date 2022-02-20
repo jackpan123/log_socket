@@ -53,7 +53,6 @@ int main(int agrc, char* agrv[])
     int sockfd;
     struct sockaddr_in servaddr;
 
-    // socket create and varification
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd == -1) {
         printf("socket creation failed...\n");
@@ -63,12 +62,10 @@ int main(int agrc, char* agrv[])
         printf("Socket successfully created..\n");
     bzero(&servaddr, sizeof(servaddr));
    
-    // assign IP, PORT
     servaddr.sin_family = AF_INET;
     servaddr.sin_addr.s_addr = inet_addr(monitor_ip);
     servaddr.sin_port = htons(port);
    
-    // connect the client socket to server socket
     if (connect(sockfd, (SA*)&servaddr, sizeof(servaddr)) != 0) {
         printf("connection with the server failed...\n");
         exit(0);
@@ -76,9 +73,7 @@ int main(int agrc, char* agrv[])
     else
         printf("connected to the server..\n");
    
-    // function for chat
     func(sockfd, filepath);
    
-    // close the socket
     close(sockfd);
 }
