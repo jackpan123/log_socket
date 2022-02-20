@@ -23,9 +23,12 @@ void func(int sockfd, char *filepath)
         bzero(buff, MAX);
         size_t readNumber = read(sockfd, buff, MAX);
         if (readNumber == 0) {
+            printf("read number is zero\n");
             break;
         }
         printf("%s", buff);
+        long write_number = write(sockfd, buff, MAX);
+        printf("Write line buf number %ld\n", write_number);
         fp = fopen(filepath, "a+");
         fprintf(fp, "%s", buff);
         fclose(fp);
@@ -40,10 +43,12 @@ void func(int sockfd, char *filepath)
    
 int main(int agrc, char* agrv[])
 {
-    printf("%s", agrv[1]);
     char *filepath = agrv[1];
-    printf("%s", filepath);
-    char *port_arr = agrv[2];
+    printf("file path is %s\n", filepath);
+    char *monitor_ip = agrv[2];
+    printf("server ip is %s\n", monitor_ip);
+    char *port_arr = agrv[3];
+    printf("server port is %s\n", port_arr);
     int port = atoi(port_arr);
     int sockfd;
     struct sockaddr_in servaddr;
@@ -60,7 +65,7 @@ int main(int agrc, char* agrv[])
    
     // assign IP, PORT
     servaddr.sin_family = AF_INET;
-    servaddr.sin_addr.s_addr = inet_addr("192.168.38.16");
+    servaddr.sin_addr.s_addr = inet_addr(monitor_ip);
     servaddr.sin_port = htons(port);
    
     // connect the client socket to server socket
